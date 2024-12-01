@@ -99,21 +99,26 @@ def gerar_relatorio(linha):
 
 def gerar_grafico(linha):
     timesteps = range(len(linha.producao_history))
-    plt.figure(figsize=(10, 6))
-    plt.plot(timesteps, linha.producao_history, 'r-', label="Itens Produzidos")  # Linha vermelha
-    plt.plot(timesteps, linha.consumo_history, 'b-', label="Itens Consumidos")  # Linha azul
-    plt.xlabel("Timesteps")
+    buffer_ocupacao = [prod - cons for prod, cons in zip(linha.producao_history, linha.consumo_history)]
+
+    plt.plot(timesteps, linha.producao_history, label="Produção", color="blue")
+    plt.plot(timesteps, linha.consumo_history, label="Consumo", color="red")
+    plt.plot(timesteps, buffer_ocupacao, label="Ocupação do Buffer", color="green")
+
+    plt.axhline(linha.capacidade, color="orange", linestyle="--", label="Capacidade Máxima do Buffer")
+    plt.xlabel("Timestep")
     plt.ylabel("Quantidade de Itens")
-    plt.title("Produção e Consumo ao Longo do Tempo")
+    plt.title("Produção, Consumo e Ocupação do Buffer")
     plt.legend()
     plt.grid(True)
     plt.show()
 
+
 if __name__ == "__main__":
     # Parâmetros de entrada
     capacidade_buffer = 10
-    num_produtores = 2
-    num_consumidores = 3
-    timesteps = 20  # Quantidade de timesteps
+    num_produtores = 3
+    num_consumidores = 4
+    timesteps = 15  # Quantidade de timesteps
 
     executar_simulacao(capacidade_buffer, num_produtores, num_consumidores, timesteps)
